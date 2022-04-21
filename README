@@ -1,0 +1,42 @@
+La executia programului se citesc datele si se introduc in lista, apoi se parcurg 
+argumentele din linia de comanda si se fac modificarile corespunzatoare asupra listei,
+apelandu-se functia dedicata fiecarui task. La final se afiseaza lista dupa modificari.
+Aceasta functionare este implementata in fisierul tema1.c, iar fiecare task in fisierul
+.c corespunzator.Fisierele lista.c si listaDiviziuni.c contin functiile pentru liste.
+
+    Task1 (eliminare 1)
+
+Am implementat o functie care verifica pentru un nod dat daca trebuie sau nu eliminat,
+parcurgand fereastra corespunzatoare si calculand folosind formula. Intr-o alta functie,
+recursiva, parcurg nodurile listei si retin intr-o variabila locala daca nodul curent trebuie
+eliminat, folosind prima functie. La intoarcerea din recursivitate elimin nodul daca este cazul.
+
+    Task2 (eliminare 2)
+
+Similiar eliminarii 1, am implementat o functie recursiva care parcurge nodurile, calculeaza
+noua valoare a nodului curent, pe care o retine intr-o variabila locala si i-o atribuie nodului
+la intoarcerea din recursivitate. Am folosit aceeasi functie si pentru eliminare 3, deoarece se
+schimba doar modul de calcul al noii valori. Astfel ca transmit un pointer la functia de calcul
+a noii valori corespunzatoare. Pentru functia de calcul a valorii mediane, pentru fiecare nod din
+fereastra verific cate elemente din fereastra sunt mai mici,respectiv mai mari decat el.Daca
+jumatate din numarul de elemente sunt mai mici si jumatate mai mari, inseamna ca nodul este median
+si ii returnez valoarea.
+
+    Task3 (eliminare 3)
+
+Refolosesc functia recursiva descrisa mai sus, apelata cu functia de calcul a mediei aritmetice.
+Pentru aceasta calculez suma elementelor din fereastra si o impart la numarul de elemente.
+
+    Task4 (uniformizare)
+
+Parcurg lista, calculez diferenta dintre timestampurile nodului curent si precedent, 
+si in caz ca e in intervalul dat, actualizez valoarea nodului curent.
+
+    Task5 (statistici)
+
+Definesc o noua structura 'diviziune', prin inceputul, finalul si numarul de elemene a acesteia, si 
+o lista de diviziuni. Pentru fiecare element din lista cu date, verific daca diviziunea in care
+se afla valoarea este deja in lista, caz in care ii cresc numarul de elemente diviziunii, iar in caz
+ca nu este, adaug diviziuna in lista de diviziuni, pastrand in aceasta o ordine crescatoare.
+La final, afisez lista de diviziuni
+
