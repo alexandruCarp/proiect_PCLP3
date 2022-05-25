@@ -17,10 +17,13 @@ double W(int i){
 }
 
 //functie pentru calculul lui f
-double f(List left,List right, double c){
+double f(List left,List right, double c,size_t size){
     double value = 0;
     for(int i = k-1; i >= 0 ; i--){
-        value = value + (1-c)*left->val.value*W(i) + c*right->val.value*W(i);
+        Data *x,*y;
+        x=((Data*)(left->val));
+        y=((Data*)(right->val));
+        value = value + (1-c)*x->value*W(i) + c*y->value*W(i);
         left = left->prev;
         right = right->next;
     }
@@ -28,21 +31,26 @@ double f(List left,List right, double c){
 }
 
 //functie ce parcurge lista si calculeaza si introduce noile valori daca este cazul
-void completare(Dlist lista){
+void completare(Dlist lista,size_t size){
     if(lista->head == NULL)
         return;
     List p = lista->head;
     while(p->next != NULL){
         List urm = p->next;
-        if(urm->val.timestamp - p->val.timestamp > prag){
+        Data *x,*y;
+        x=((Data*)(urm->val));
+        y=((Data*)(p->val));
+        if(x->timestamp - y->timestamp > prag){
             int pas = prag/5;
-            int time = p->val.timestamp + pas;
-            while(time < urm->val.timestamp){
-                double c = C(time,p->val.timestamp,urm->val.timestamp);
-                Data x;
-                x.timestamp = time;
-                x.value = f(p,urm,c);
-                adaugaInainteDeNod(lista,urm,x);
+            int time = y->timestamp + pas;
+            int timelimit=x->timestamp;
+            while(time < timelimit){
+                double c = C(time,y->timestamp,x->timestamp);
+                Data aux;
+                double newval=f(p,urm,c,size);
+                aux.timestamp = time;
+                aux.value = newval;  
+                adaugaInainteDeNod(lista,urm,&aux,size);
                 time += pas;
             }
         }

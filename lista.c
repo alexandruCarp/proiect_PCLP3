@@ -1,7 +1,4 @@
 #include "lista.h"
-#include <stdlib.h>
-#include <stdio.h>
-
 //functie pentru initializarea listei
 Dlist initList(){
     Dlist lista = malloc(sizeof(*lista));
@@ -12,9 +9,10 @@ Dlist initList(){
 }
 
 //functie pentru adaugarea unui element la finalul listei
-void adaugaFinal(Dlist lista, Data x){
-    List nou = malloc(sizeof(*nou));
-    nou->val = x;
+void adaugaFinal(Dlist lista, void* x,size_t nrbytes){
+    List nou = malloc(sizeof(Nod));
+    nou->val=malloc(nrbytes);
+    memcpy(nou->val,x,nrbytes);
     nou->next = NULL;
     nou->prev = lista->tail;
     if(lista->head == NULL){
@@ -29,6 +27,8 @@ void adaugaFinal(Dlist lista, Data x){
 void freeList(Dlist lista){
     while(lista->head != NULL){
         List urm = lista->head->next;
+        if(lista->head->val!=NULL)
+            free(lista->head->val);
         free(lista->head);
         lista->head=urm;
     }
@@ -36,12 +36,15 @@ void freeList(Dlist lista){
 }
 
 //functie pentru afisarea elementelor din lista
-void printList(Dlist lista){
+void printList(Dlist lista,size_t size){
     printf("%d\n",lista->nrElem);
     List p = lista->head;
     while(p != NULL){
-        printf("%d %.2lf\n",p->val.timestamp,p->val.value);
+        Data *x;
+        x=((Data*)(p->val));
+        printf("%d %.2lf\n",x->timestamp,x->value);
         p = p->next;
+        
     }
 }
 
@@ -55,14 +58,17 @@ void removeNode(Dlist lista, List nod){
         nod->prev->next = nod->next;
     else
         lista->head = nod->next;
+    if(nod->val!=NULL)
+        free(nod->val);
     free(nod);
     lista->nrElem--;
 }
 
 //functie pentru adaugarea unui nod inaintea unui nod dat
-void adaugaInainteDeNod(Dlist lista, List p, Data x){
-    List nou = malloc(sizeof(*nou));
-    nou->val = x;
+void adaugaInainteDeNod(Dlist lista, List p, void* x,size_t size){
+    List nou = malloc(sizeof(Nod));
+    nou->val=malloc(size);  
+    memcpy(nou->val,x,size);
     nou->next = p;
     nou->prev = p->prev;
     if(p->prev != NULL){
