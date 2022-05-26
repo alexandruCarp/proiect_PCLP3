@@ -21,11 +21,11 @@ int main(int argc, char *argv[]){
     //parcurg argumente din linia de comanda si apelez functia corespunzatoare
     for(int i = 1; i < argc ; i++){
         if(!strcmp(argv[i],"--e1"))
-            eliminare1(lista,lista->head,sizeof(Data));            
+            eliminare1(lista,lista->head,NULL,sizeof(Data));       
         if(!strcmp(argv[i],"--e2"))
-            eliminare23(lista,lista->head,calcul_median,sizeof(Data));
+            eliminare23(lista,lista->head,NULL,calcul_median,sizeof(Data));
         if(!strcmp(argv[i],"--e3"))
-            eliminare23(lista,lista->head,calcul_medie,sizeof(Data));
+            eliminare23(lista,lista->head,NULL,calcul_medie,sizeof(Data));
         if(!strcmp(argv[i],"--u"))
             uniformizare(lista,sizeof(Data));
         if(!strcmp(argv[i],"--c"))

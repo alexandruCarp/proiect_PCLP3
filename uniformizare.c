@@ -5,11 +5,12 @@
 void uniformizare(Dlist lista,size_t size){
     if(lista->head == NULL)
         return;
-    List p = lista->head->next;
+    List p = lista->head->link;
+    List prev = lista->head;
     while(p != NULL){
         Data *x,*y;
         x=((Data*)(p->val));
-        y=((Data*)(p->prev->val));
+        y=((Data*)(prev->val));
         int difTemp = x->timestamp - y->timestamp;
         if(difTemp >= 100 && difTemp <= 1000){
             x->timestamp += y->timestamp;
@@ -17,6 +18,8 @@ void uniformizare(Dlist lista,size_t size){
             x->value += y->value;
             x->value /= 2;
         }
-        p = p->next;
+        List tmp = p;
+        p = XOR(p->link,prev);
+        prev = tmp;
     }
 }

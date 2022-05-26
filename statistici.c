@@ -5,6 +5,7 @@
 //daca se afla ii creste numarul de aparitii, altfel introduce o noua diviziune in lista de diviziuni
 void statistici(Dlist lista, int delta,size_t size){
     List p = lista->head;
+    List prev = NULL;
     float min=99999,max=-99999;
     while(p!=NULL)
         {
@@ -14,7 +15,10 @@ void statistici(Dlist lista, int delta,size_t size){
                 max=x->value;
             if(x->value<min)
                 min=x->value;
-            p=p->next;
+
+            List tmp = p;
+            p=XOR(p->link,prev);
+            prev = tmp;
         }
     int i,minint;
     for(i=-9999;i<9999;i++)
@@ -26,6 +30,7 @@ void statistici(Dlist lista, int delta,size_t size){
     while(minint<=max)
     {
         List parc=lista->head;
+        List pr = NULL;
         int numbers=0;
         while(parc!=NULL)
             {
@@ -33,7 +38,9 @@ void statistici(Dlist lista, int delta,size_t size){
                 x=((Data*)(parc->val));
                 if(x->value>=minint && x->value<=minint+delta)
                     numbers++;
-                parc=parc->next;
+                List tmp = parc;
+                parc=XOR(parc->link,pr);
+                pr = tmp;
             }
        
         if(numbers!=0)

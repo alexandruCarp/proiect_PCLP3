@@ -13,20 +13,25 @@ void adaugaFinal(Dlist lista, void* x,size_t nrbytes){
     List nou = malloc(sizeof(Nod));
     nou->val=malloc(nrbytes);
     memcpy(nou->val,x,nrbytes);
-    nou->next = NULL;
-    nou->prev = lista->tail;
+
     if(lista->head == NULL){
         lista->head = nou;
         lista->tail = nou;
+        nou->link = NULL;
+        return;
     }
-    else lista->tail->next = nou;
+    lista->tail->link = XOR(lista->tail->link,nou);
+    nou->link = lista->tail;
     lista->tail = nou;
 }
 
 //functie pentru eliberarea memoriei alocate listei
 void freeList(Dlist lista){
+    List prev = NULL;
     while(lista->head != NULL){
-        List urm = lista->head->next;
+        List urm = XOR(prev,lista->head->link);
+        prev = lista->head;
+
         if(lista->head->val!=NULL)
             free(lista->head->val);
         free(lista->head);
@@ -39,25 +44,29 @@ void freeList(Dlist lista){
 void printList(Dlist lista,size_t size){
     printf("%d\n",lista->nrElem);
     List p = lista->head;
+    List prev = NULL;
     while(p != NULL){
         Data *x;
         x=((Data*)(p->val));
         printf("%d %.2lf\n",x->timestamp,x->value);
-        p = p->next;
-        
+
+        List tmp = p;
+        p = XOR(p->link,prev);
+        prev = tmp;
     }
 }
 
 //functie pentru eliminarea unui nod din lista
-void removeNode(Dlist lista, List nod){
+void removeNode(Dlist lista, List nod, List prev){
+    List next = XOR(nod->link, prev);
     if(nod != lista->tail)
-        nod->next->prev = nod->prev;
+        next->link = XOR( XOR(next->link,nod), prev);
     else
-        lista->tail = nod->prev;
+        lista->tail = prev;
     if(nod != lista->head)
-        nod->prev->next = nod->next;
+        prev->link = XOR( XOR(prev->link, nod), next);
     else
-        lista->head = nod->next;
+        lista->head = next;
     if(nod->val!=NULL)
         free(nod->val);
     free(nod);
@@ -65,17 +74,20 @@ void removeNode(Dlist lista, List nod){
 }
 
 //functie pentru adaugarea unui nod inaintea unui nod dat
-void adaugaInainteDeNod(Dlist lista, List p, void* x,size_t size){
+void adaugaInainteDeNod(Dlist lista, List prev, List p, void* x,size_t size){
     List nou = malloc(sizeof(Nod));
     nou->val=malloc(size);  
     memcpy(nou->val,x,size);
-    nou->next = p;
-    nou->prev = p->prev;
-    if(p->prev != NULL){
-        p->prev->next = nou;
+
+    nou->link = XOR(prev,p);
+
+    if(prev != NULL){
+        prev->link = XOR(XOR(prev->link,p), nou);
     }
     else
         lista->head = nou;
-    p->prev = nou;
+
+    p->link = XOR(XOR(p->link,prev), nou);
+
     lista->nrElem++;
 }

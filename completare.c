@@ -17,15 +17,22 @@ double W(int i){
 }
 
 //functie pentru calculul lui f
-double f(List left,List right, double c,size_t size){
+double f(List left,List prev_left, List right,List prev_right, double c,size_t size){
+
     double value = 0;
     for(int i = k-1; i >= 0 ; i--){
         Data *x,*y;
         x=((Data*)(left->val));
         y=((Data*)(right->val));
         value = value + (1-c)*x->value*W(i) + c*y->value*W(i);
-        left = left->prev;
-        right = right->next;
+
+        List tmp = left;
+        left = XOR(left->link,prev_left);
+        prev_left = tmp;
+
+        tmp = right;
+        right = XOR(right->link,prev_right);
+        prev_right = tmp;
     }
     return value;
 }
@@ -35,8 +42,10 @@ void completare(Dlist lista,size_t size){
     if(lista->head == NULL)
         return;
     List p = lista->head;
-    while(p->next != NULL){
-        List urm = p->next;
+    List prev = NULL;
+    while(XOR(p->link,prev) != NULL){
+        List urm = XOR(p->link,prev);
+        List urm_next = XOR(urm->link, p);
         Data *x,*y;
         x=((Data*)(urm->val));
         y=((Data*)(p->val));
@@ -47,13 +56,16 @@ void completare(Dlist lista,size_t size){
             while(time < timelimit){
                 double c = C(time,y->timestamp,x->timestamp);
                 Data aux;
-                double newval=f(p,urm,c,size);
+                double newval=f(p,XOR(p->link,prev),urm,XOR(urm->link,urm_next),c,size);
                 aux.timestamp = time;
                 aux.value = newval;  
-                adaugaInainteDeNod(lista,urm,&aux,size);
+                adaugaInainteDeNod(lista,XOR(urm->link,urm_next),urm,&aux,size);
                 time += pas;
             }
         }
+
+        prev = XOR(urm->link,urm_next);
         p = urm;
+
     }
 }
